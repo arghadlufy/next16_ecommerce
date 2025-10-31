@@ -1,10 +1,17 @@
 import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
 import { Product } from "./generated/prisma/client";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="border rounded-lg shadow-md p-4">
+    <Card className="pt-0 overflow-hidden">
       <div className="relative aspect-video">
         {/* Automatically lazy load */}
         {product.image && (
@@ -18,9 +25,15 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
         {/* for lg screen, as multi column so images can be lower in quality as user cannot notice that, so 33vw quality, for mobile screen its 1 column layout so 100vw quality as Images will be more visible and should not look bad */}
       </div>
-      <h3 className="text-lg font-bold mb-2">{product.name}</h3>
-      <p className="text-gray-600 mb-4">{product.description}</p>
-      <p className="text-xl font-bold">{formatPrice(product.price)}</p>
-    </div>
+
+      <CardHeader>
+        <CardTitle>{product.name}</CardTitle>
+        <CardDescription>{product.description}</CardDescription>
+      </CardHeader>
+
+      <CardFooter>
+        <p>{formatPrice(product.price)}</p>
+      </CardFooter>
+    </Card>
   );
 }
