@@ -156,3 +156,19 @@ await prisma.product.create({
 The `connect` approach is more explicit and makes it clear that you're creating a relationship
 to an existing record. Use `create` if you want to create both the Product and Category in one
 operation, or `connectOrCreate` if the Category might or might not exist.
+
+
+
+**Dynamic Rendering
+With Dynamic Rendering, routes are rendered at request time. This happens when your route uses request-specific information like cookies, headers, or search params.
+
+A route becomes dynamic when it uses any of these APIs:
+
+cookies
+headers
+connection
+draftMode
+searchParams prop
+unstable_noStore
+fetch with { cache: 'no-store' }
+Dynamic routes are not cached in the Full Route Cache, but can still use the Data Cache for data requests.
