@@ -1,0 +1,100 @@
+Prisma schema migrate command.
+npx prisma migrate dev --name add_product
+
+npx prisma studio // open the tables
+
+================================================================================
+Product - Category Relationship Types in Prisma Schema
+================================================================================
+
+1. One-to-One (1:1) - 1 product belongs to 1 category, 1 category has 1 product
+--------------------------------------------------------------------------------
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String   @unique
+}
+
+model Category {
+  id       String   @id @default(cuid())
+  name     String
+  slug     String   @unique
+  product  Product? // Optional because not every category may have a product
+}
+
+Note: The @unique constraint on categoryId ensures one-to-one relationship.
+
+
+2. One-to-Many (1:N) - 1 category can have multiple products, 1 product belongs to 1 category
+--------------------------------------------------------------------------------
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  products Product[] // Array because one category can have many products
+}
+
+Note: This is the current schema setup. Foreign key on Product side (categoryId).
+
+
+3. Many-to-Many (N:N) - 1 product can belong to multiple categories, 1 category can have multiple products
+--------------------------------------------------------------------------------
+Option A: Implicit Many-to-Many (Prisma handles join table automatically)
+model Product {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  categories  Category[] // Array because one product can have many categories
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  products Product[] // Array because one category can have many products
+}
+
+
+Option B: Explicit Many-to-Many (with custom join table for additional fields)
+model Product {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  categories  ProductCategory[] // Relation through join table
+}
+
+model Category {
+  id       String            @id @default(cuid())
+  name     String
+  slug     String            @unique
+  products ProductCategory[] // Relation through join table
+}
+
+model ProductCategory {
+  id         String   @id @default(cuid())
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  createdAt  DateTime @default(now())
+  
+  @@unique([productId, categoryId]) // Ensures no duplicate relationships
+}
+
+Note: Use Option A for simple many-to-many. Use Option B if you need to store additional
+      data about the relationship (like createdAt, quantity, etc.)
+
+
+// Create Seeding script
+// Run typescript directly without changing to JS = Package name is TSX
+npm install -D tsx
