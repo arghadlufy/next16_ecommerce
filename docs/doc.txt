@@ -98,3 +98,61 @@ Note: Use Option A for simple many-to-many. Use Option B if you need to store ad
 // Create Seeding script
 // Run typescript directly without changing to JS = Package name is TSX
 npm install -D tsx
+
+
+================================================================================
+Creating Records with Relationships (Using Prisma Connect)
+================================================================================
+
+When creating a Product that has a relationship with Category, you need to use Prisma's
+`connect` method to link to an existing category.
+
+Example from seed.ts:
+await prisma.product.create({
+  data: {
+    ...product,
+    category: {
+      connect: { id: product.category },
+    },
+  },
+});
+
+Explanation:
+------------
+1. `...product` - Spreads all product properties (name, description, price, etc.)
+                 Note: product.category here is a string (category ID), not a relation object
+
+2. `category: { connect: { id: product.category } }` - Overrides the category field
+   - Uses Prisma's `connect` method to link to an existing Category
+   - `connect` tells Prisma to find a Category with the matching ID and create the relationship
+   - This is the explicit way to create relationships when you know the related record exists
+
+Why use `connect`?
+------------------
+- Your Product type might have `category: string` (the category ID)
+- But Prisma expects `category` to be a relation object, not a string
+- `connect` explicitly tells Prisma to link to an existing record by ID
+
+Alternative approaches:
+-----------------------
+Option 1: Direct categoryId assignment (simpler)
+await prisma.product.create({
+  data: {
+    ...product,
+    categoryId: product.category, // Direct assignment of foreign key
+  },
+});
+
+Option 2: Using connect (more explicit about relationships - recommended)
+await prisma.product.create({
+  data: {
+    ...product,
+    category: {
+      connect: { id: product.category },
+    },
+  },
+});
+
+The `connect` approach is more explicit and makes it clear that you're creating a relationship
+to an existing record. Use `create` if you want to create both the Product and Category in one
+operation, or `connectOrCreate` if the Category might or might not exist.

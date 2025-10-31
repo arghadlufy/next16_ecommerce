@@ -3,6 +3,7 @@ export type Product = {
   name: string;
   price: number;
   description: string;
+  slug: string;
   image: string;
   category: string;
 };
@@ -16,6 +17,7 @@ export const mockProducts: Product[] = [
     price: 199.99,
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
     category: "Electronics",
+    slug: "wireless-headphones",
   },
   {
     id: "2",
@@ -25,6 +27,7 @@ export const mockProducts: Product[] = [
     price: 149.99,
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
     category: "Electronics",
+    slug: "smart-watch",
   },
   {
     id: "3",
@@ -33,6 +36,7 @@ export const mockProducts: Product[] = [
     price: 89.99,
     image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
     category: "Sports",
+    slug: "running-shoes",
   },
   {
     id: "4",
@@ -41,6 +45,7 @@ export const mockProducts: Product[] = [
     price: 24.99,
     image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d",
     category: "Home",
+    slug: "ceramic-mug",
   },
   {
     id: "5",
@@ -49,5 +54,6 @@ export const mockProducts: Product[] = [
     price: 79.99,
     image: "https://images.unsplash.com/photo-1491637639811-60e2756cc1c7",
     category: "Fashion",
+    slug: "leather-backpack",
   },
 ];
